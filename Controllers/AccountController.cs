@@ -18,7 +18,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public ActionResult Login(Models.Membership model)
+        public ActionResult Login(WebApplication1.Models.Membership model) 
         {
             using (var context = new OfficeEntities())
             {
@@ -29,8 +29,8 @@ namespace WebApplication1.Controllers
                     return RedirectToAction("Index", "Employees");
                 }
 
-                ModelState.AddModelError("", "Invalid username and password");
-                return View();
+                ModelState.AddModelError("", "Invalid username or password");
+                return View(model);
             }
         }
 
@@ -46,7 +46,6 @@ namespace WebApplication1.Controllers
             {
                 using (var context = new OfficeEntities())
                 {
-                    
                     bool userExists = context.User.Any(x => x.UserName == model.UserName);
                     if (userExists)
                     {
@@ -57,9 +56,7 @@ namespace WebApplication1.Controllers
                     context.User.Add(model);
                     context.SaveChanges();
 
-                  
                     FormsAuthentication.SetAuthCookie(model.UserName, false);
-
                     return RedirectToAction("Login");
                 }
             }
